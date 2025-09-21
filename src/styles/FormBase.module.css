@@ -1,0 +1,174 @@
+/* FormBase.module.css */
+
+/* === Base: Mobile === */
+.container {
+  width: 100%;
+  max-width: 360px;
+  margin: 0 auto;
+  padding: 24px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  min-height: 100vh;
+  box-sizing: border-box;
+  background-color: #f9f9f9;
+  text-align: center;
+}
+
+.title {
+  font-size: 24px;
+  margin-bottom: 20px;
+  color: #333;
+  font-weight: 600;
+}
+.labelLarge {
+  font-size: 20px;
+}
+.field {
+  margin-bottom: 20px;
+  display: flex;
+  flex-direction: column;
+  text-align: left;
+}
+
+.label {
+  font-size: 16px;
+  margin-bottom: 4px;
+  color: #333;
+}
+
+.input {
+  width: 100%;
+  padding: 14px;
+  font-size: 16px;
+  border: 1px solid #ccc;
+  border-radius: 10px;
+  outline: none;
+  box-sizing: border-box;
+}
+
+.input:focus {
+  border-color: #007bff;
+  box-shadow: 0 0 0 2px rgba(0, 123, 255, 0.2);
+}
+
+.button {
+  width: 100%;
+  padding: 16px;
+  margin-top: 16px;
+  background-color: #007bff;
+  color: white;
+  font-size: 16px;
+  border: none;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.button:active {
+  background-color: #0056b3;
+}
+
+.links {
+  margin-top: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  align-items: center;
+}
+
+.linkButton {
+  background: none;
+  border: none;
+  color: #007bff;
+  cursor: pointer;
+  font-size: 16px;
+  padding: 8px 0;
+}
+
+.message {
+  margin-top: 20px;
+  text-align: center;
+  font-size: 16px;
+  font-weight: 500;
+}
+
+.success {
+  color: green;
+}
+
+.error {
+  color: red;
+}
+
+.loading {
+  font-style: italic;
+  color: #999;
+}
+
+/* === Tablet (≥768px) === */
+@media (min-width: 768px) {
+  .container {
+    max-width: 480px;
+    padding: 32px;
+  }
+
+  .title {
+    font-size: 28px;
+  }
+
+  .label {
+    font-size: 18px;
+  }
+
+  .input {
+    font-size: 18px;
+    padding: 16px;
+  }
+
+  .button {
+    font-size: 18px;
+    padding: 18px;
+  }
+
+  .linkButton {
+    font-size: 18px;
+  }
+
+  .message {
+    font-size: 18px;
+  }
+}
+
+/* === Desktop (≥1024px) === */
+@media (min-width: 1024px) {
+  .container {
+    max-width: 600px;
+  }
+
+  .title {
+    font-size: 32px;
+  }
+
+  .label {
+    font-size: 20px;
+  }
+
+  .input {
+    font-size: 20px;
+    padding: 18px;
+  }
+
+  .button {
+    font-size: 20px;
+    padding: 20px;
+  }
+
+  .linkButton {
+    font-size: 20px;
+  }
+
+  .message {
+    font-size: 20px;
+  }
+}
