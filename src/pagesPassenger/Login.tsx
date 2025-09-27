@@ -10,7 +10,6 @@ const Login: React.FC = () => {
   const [message, setMessage] = useState("");
   const [loading, setLoading] = useState(false);
 
-  // Función para obtener el token CSRF de las cookies
   const getCsrfToken = () => {
     const cookieValue = document.cookie
       .split("; ")
@@ -63,7 +62,7 @@ const Login: React.FC = () => {
 
       if (response.ok) {
         setMessage("Login exitoso! Redirigiendo...");
-        setTimeout(() => navigate("/"), 1000);
+        setTimeout(() => navigate("/main-passenger"), 1000);
       } else {
         if (data.reason === "email_unverified") {
           navigate("/resend-verify-email", { state: { email } });
@@ -94,7 +93,7 @@ const Login: React.FC = () => {
       <h1>Inicio de Sesión</h1>
 
       <div className={styles.field}>
-        <label className={styles.label}>Email:</label>
+        <label className={styles.label}>📧 Email:</label>
         <input
           type="email"
           name="email"
@@ -106,7 +105,7 @@ const Login: React.FC = () => {
       </div>
 
       <div className={styles.field}>
-        <label className={styles.label}>Contraseña:</label>
+        <label className={styles.label}>🔒 Contraseña:</label>
         <input
           type="password"
           name="password"

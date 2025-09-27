@@ -6,6 +6,10 @@ import EmailVerified from "./pagesPassenger/EmailVerified";
 import ForgotPassword from "./pagesPassenger/ForgotPassword";
 import ResetPassword from "./pagesPassenger/ResetPassword";
 import ResendVerifyEmail from "./pagesPassenger/ResendVerifyEmail";
+import ProtectedRoute from "./components/ProtectedRoute";
+import MainPagePassenger from "./pagesPassenger/MainPagePassenger";
+import DetailExcursionPassenger from "./pagesPassenger/ExcursionDetailPassenger";
+
 const App: React.FC = () => {
   return (
     <Routes>
@@ -15,6 +19,26 @@ const App: React.FC = () => {
       <Route path="/forgot-password" element={<ForgotPassword />} />
       <Route path="/reset-password" element={<ResetPassword />} />
       <Route path="/resend-verify-email" element={<ResendVerifyEmail />} />
+
+      {/* Rutas protegidas */}
+      <Route
+        path="/main-passenger"
+        element={
+          <ProtectedRoute>
+            <MainPagePassenger />
+          </ProtectedRoute>
+        }
+      />
+
+      {/* Detalle de excursión protegido */}
+      <Route
+        path="/excursion/:id"
+        element={
+          <ProtectedRoute>
+            <DetailExcursionPassenger />
+          </ProtectedRoute>
+        }
+      />
     </Routes>
   );
 };

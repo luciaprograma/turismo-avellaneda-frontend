@@ -1,0 +1,118 @@
+/* PassengerMenuBar.module.css */
+
+/* === Base: Mobile (default) === */
+.menuBar {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 12px 16px;
+  background-color: #007bff;
+  color: white;
+  box-sizing: border-box;
+}
+
+.menuLeft,
+.menuRight {
+  display: flex;
+  align-items: center;
+}
+
+.menuButton {
+  background: none;
+  border: none;
+  color: white;
+  font-size: 24px;
+  cursor: pointer;
+  padding: 8px;
+}
+
+.dropdown {
+  position: absolute;
+  top: 56px; /* altura del menú */
+  left: 16px;
+  background-color: white;
+  color: #333;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  min-width: 140px;
+  z-index: 1000;
+  display: flex;
+  flex-direction: column;
+}
+
+.dropdownItem {
+  padding: 12px 16px;
+  cursor: pointer;
+  font-size: 16px;
+}
+
+.dropdownItem:hover {
+  background-color: #f0f0f0;
+}
+
+.menuRight {
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  padding: 8px 12px;
+  border-radius: 8px;
+  transition: background-color 0.2s ease;
+}
+
+.menuRight:hover {
+  background-color: rgba(255, 255, 255, 0.2);
+}
+
+/* === Tablet (≥768px) === */
+@media (min-width: 768px) {
+  .menuBar {
+    padding: 16px 24px;
+  }
+
+  .menuButton {
+    font-size: 28px;
+    padding: 10px;
+  }
+
+  .dropdown {
+    top: 64px;
+    min-width: 160px;
+  }
+
+  .dropdownItem {
+    font-size: 18px;
+    padding: 14px 18px;
+  }
+
+  .menuRight {
+    font-size: 18px;
+    padding: 10px 16px;
+  }
+}
+
+/* === Desktop (≥1024px) === */
+@media (min-width: 1024px) {
+  .menuBar {
+    padding: 16px 32px;
+  }
+
+  .menuButton {
+    font-size: 32px;
+  }
+
+  .dropdown {
+    top: 72px;
+    min-width: 180px;
+  }
+
+  .dropdownItem {
+    font-size: 20px;
+    padding: 16px 20px;
+  }
+
+  .menuRight {
+    font-size: 20px;
+    padding: 12px 20px;
+  }
+}
