@@ -66,6 +66,7 @@
   gap: 12px;
   margin-top: 12px;
   justify-content: center;
+  flex-wrap: wrap;
 }
 
 .buttons button {
@@ -82,6 +83,62 @@
 
 .buttons button:active {
   background-color: #0056b3;
+}
+
+/* === Botón/label de upload === */
+.uploadLabel {
+  flex: 1;
+  display: inline-block;
+  text-align: center;
+  padding: 12px 0;
+  font-size: 16px;
+  border-radius: 10px;
+  background-color: #28a745;
+  color: #fff;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.uploadLabel:hover {
+  background-color: #218838;
+}
+
+.uploadLabel:active {
+  background-color: #1e7e34;
+}
+
+.uploadInput {
+  display: none; /* se esconde el input real */
+}
+
+/* === Header con botón volver === */
+.header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 20px;
+}
+
+.backButton {
+  background-color: transparent;
+  border: none;
+  color: #007bff;
+  font-size: 18px;
+  font-weight: 500;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  padding: 8px;
+  border-radius: 8px;
+  transition: background-color 0.2s ease;
+}
+
+.backButton:hover {
+  background-color: rgba(0, 123, 255, 0.1);
+}
+
+.backButton:active {
+  background-color: rgba(0, 123, 255, 0.2);
 }
 
 /* === Tablet (≥768px) === */
@@ -108,13 +165,19 @@
     font-size: 18px;
   }
 
-  .buttons button {
+  .buttons button,
+  .uploadLabel {
     font-size: 18px;
     padding: 14px 0;
   }
 
   .links a {
     font-size: 18px;
+  }
+
+  .backButton {
+    font-size: 20px;
+    padding: 10px;
   }
 }
 
@@ -142,12 +205,18 @@
     font-size: 20px;
   }
 
-  .buttons button {
+  .buttons button,
+  .uploadLabel {
     font-size: 20px;
     padding: 16px 0;
   }
 
   .links a {
     font-size: 20px;
+  }
+
+  .backButton {
+    font-size: 22px;
+    padding: 12px;
   }
 }

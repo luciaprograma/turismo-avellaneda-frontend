@@ -39,7 +39,7 @@ const PassengerMenuBar: React.FC = () => {
         headers: {
           Accept: "application/json",
           "Content-Type": "application/json",
-          "X-XSRF-TOKEN": csrfToken || "", // Agregar el token CSRF
+          "X-XSRF-TOKEN": csrfToken || "",
         },
       });
 

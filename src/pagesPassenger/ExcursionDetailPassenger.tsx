@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
+import { ArrowLeft } from "lucide-react";
 import styles from "../styles/ExcursionDetailPassenger.module.css";
+import ConfirmModalPassenger from "./ConfirmModalPassenger";
 
 interface ExcursionDate {
   id: number;
@@ -19,14 +21,17 @@ interface ExcursionDetail {
 
 const DetailExcursionPassenger: React.FC = () => {
   const { id } = useParams<{ id: string }>();
+  const navigate = useNavigate();
   const [excursion, setExcursion] = useState<ExcursionDetail | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [selectedDate, setSelectedDate] = useState<ExcursionDate | null>(null);
+
   useEffect(() => {
     const fetchExcursion = async () => {
       try {
-        // Primero asegurarse de tener la cookie CSRF
         await fetch("http://localhost:8000/sanctum/csrf-cookie", {
           credentials: "include",
         });
@@ -55,6 +60,13 @@ const DetailExcursionPassenger: React.FC = () => {
 
   return (
     <div className={styles.detailContainer}>
+      <button
+        className={styles.backButton}
+        onClick={() => navigate("/main-passenger")}
+      >
+        <ArrowLeft size={20} /> Volver
+      </button>
+
       <h1 className={styles.title}>{excursion.name}</h1>
       <p className={styles.description}>{excursion.description}</p>
 
@@ -68,17 +80,35 @@ const DetailExcursionPassenger: React.FC = () => {
           </p>
           <p>Lugar: (pendiente backend)</p>
 
-          <div className={styles.links}>
-            <a href={`/pago/${d.id}`}>Informar un pago</a>
-            <a href={`/comprobantes/${d.id}`}>Mis comprobantes</a>
-          </div>
-
           <div className={styles.buttons}>
-            <button>Descargar</button>
-            <button>Cargar más</button>
+            <button
+              onClick={() => {
+                setSelectedDate(d);
+                setIsModalOpen(true);
+              }}
+            >
+              Comprar
+            </button>
+
+            <label className={styles.uploadLabel}>
+              Informar un pago
+              <input
+                type="file"
+                accept=".jpg,.jpeg,.png,.pdf"
+                className={styles.uploadInput}
+              />
+            </label>
           </div>
         </div>
       ))}
+
+      {isModalOpen && excursion && selectedDate && (
+        <ConfirmModalPassenger
+          excursionName={excursion.name}
+          date={selectedDate}
+          onClose={() => setIsModalOpen(false)}
+        />
+      )}
     </div>
   );
 };
