@@ -1,4 +1,5 @@
 import React from "react";
+import { useNavigate } from "react-router-dom";
 import styles from "../styles/ConfirmModalPassenger.module.css";
 
 interface ExcursionDate {
@@ -20,11 +21,13 @@ const ConfirmModalPassenger: React.FC<ConfirmModalProps> = ({
   date,
   onClose,
 }) => {
+  const navigate = useNavigate();
+
   if (!date) return null;
 
   const handleConfirm = async () => {
     try {
-      // Obtener el token CSRF de la cookie
+      // Obtener token CSRF
       const getCsrfToken = () => {
         const cookieValue = document.cookie
           .split("; ")
@@ -43,7 +46,7 @@ const ConfirmModalPassenger: React.FC<ConfirmModalProps> = ({
           "X-XSRF-TOKEN": csrfToken || "",
         },
         body: JSON.stringify({
-          excursion_date_id: date.id, // <--- corregido para coincidir con backend
+          excursion_date_id: date.id,
         }),
       });
 
@@ -51,14 +54,17 @@ const ConfirmModalPassenger: React.FC<ConfirmModalProps> = ({
 
       if (data.success) {
         alert("Inscripción realizada correctamente!");
+        onClose();
+        navigate("/main-passenger"); // solo navega si éxito
       } else {
         alert(data.message);
+        // cerrar modal aunque haya error, pero NO navegar
+        onClose();
       }
     } catch (err) {
       alert("Error al registrar la excursión. Intente nuevamente.");
+      onClose(); // cerrar modal en caso de error inesperado
     }
-
-    onClose();
   };
 
   return (

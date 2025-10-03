@@ -83,12 +83,6 @@ const ProfileForm: React.FC = () => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    // AGREGAR ESTO PARA DEBUG
-    console.log("Estado actual del profile:", profile);
-    console.log("address:", profile.address);
-    console.log("birth_date:", profile.birth_date);
-    console.log("phone_country_code:", profile.phone_country_code);
-
     setSaving(true);
     setError(null);
     setSuccess(null);

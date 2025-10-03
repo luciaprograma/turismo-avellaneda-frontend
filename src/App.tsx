@@ -10,6 +10,7 @@ import ProtectedRoute from "./components/ProtectedRoute";
 import MainPagePassenger from "./pagesPassenger/MainPagePassenger";
 import DetailExcursionPassenger from "./pagesPassenger/ExcursionDetailPassenger";
 import Profile from "./pagesPassenger/Profile";
+import ChangePassword from "./pagesPassenger/ChangePasswordPassenger";
 
 const App: React.FC = () => {
   return (
@@ -21,7 +22,6 @@ const App: React.FC = () => {
       <Route path="/reset-password" element={<ResetPassword />} />
       <Route path="/resend-verify-email" element={<ResendVerifyEmail />} />
 
-      {/* Rutas protegidas */}
       <Route
         path="/main-passenger"
         element={
@@ -45,6 +45,14 @@ const App: React.FC = () => {
         element={
           <ProtectedRoute>
             <Profile />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/change-password"
+        element={
+          <ProtectedRoute>
+            <ChangePassword />
           </ProtectedRoute>
         }
       />
