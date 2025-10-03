@@ -9,6 +9,7 @@ import ResendVerifyEmail from "./pagesPassenger/ResendVerifyEmail";
 import ProtectedRoute from "./components/ProtectedRoute";
 import MainPagePassenger from "./pagesPassenger/MainPagePassenger";
 import DetailExcursionPassenger from "./pagesPassenger/ExcursionDetailPassenger";
+import Profile from "./pagesPassenger/Profile";
 
 const App: React.FC = () => {
   return (
@@ -30,12 +31,20 @@ const App: React.FC = () => {
         }
       />
 
-      {/* Detalle de excursión protegido */}
       <Route
         path="/excursion/:id"
         element={
           <ProtectedRoute>
             <DetailExcursionPassenger />
+          </ProtectedRoute>
+        }
+      />
+
+      <Route
+        path="/datos-personales"
+        element={
+          <ProtectedRoute>
+            <Profile />
           </ProtectedRoute>
         }
       />
