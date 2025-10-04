@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { ArrowLeft } from "lucide-react";
 import PhoneField from "../components/PhoneField";
-import "../styles/Profile.module.css";
+import styles from "../styles/FormBase.module.css";
 
 interface Profile {
   id?: number;
@@ -42,14 +42,15 @@ const ProfileForm: React.FC = () => {
         await fetch("http://localhost:8000/sanctum/csrf-cookie", {
           credentials: "include",
         });
-        const res = await fetch("http://localhost:8000/api/profile", {
-          //
 
+        const res = await fetch("http://localhost:8000/api/profile", {
           credentials: "include",
         });
+
         if (!res.ok) throw new Error("No se pudo cargar el perfil");
         const data = await res.json();
         if (data.status === "ok") setProfile(data.data);
+        else throw new Error(data.message || "Error desconocido");
       } catch (err: any) {
         setError(err.message || "Error desconocido");
       } finally {
@@ -89,26 +90,37 @@ const ProfileForm: React.FC = () => {
 
     try {
       const csrfToken = getCsrfToken();
-      console.log("Datos a enviar:", profile);
-      const res = await fetch("http://localhost:8000/api/profile", {
-        method: "POST",
+      if (!csrfToken) throw new Error("No se pudo obtener token CSRF");
+
+      const isUpdate = !!profile.id;
+      const method = isUpdate ? "PUT" : "POST";
+      const url = "http://localhost:8000/api/profile";
+
+      const res = await fetch(url, {
+        method,
         credentials: "include",
         headers: {
           Accept: "application/json",
           "Content-Type": "application/json",
-          "X-XSRF-TOKEN": csrfToken || "",
+          "X-XSRF-TOKEN": csrfToken,
         },
         body: JSON.stringify(profile),
       });
 
       if (!res.ok) throw new Error("No se pudo guardar el perfil");
       const data = await res.json();
+
       if (data.status === "ok") {
         setProfile(data.data);
-        setSuccess("Perfil guardado correctamente");
+        setSuccess(
+          isUpdate
+            ? "Perfil actualizado correctamente"
+            : "Perfil creado correctamente"
+        );
       } else throw new Error(data.message || "Error desconocido");
     } catch (err: any) {
-      setError(err.message || "Error desconocido");
+      // Solo mostramos un mensaje genérico
+      setError(err.message || "Ocurrió un error al guardar el perfil");
     } finally {
       setSaving(false);
     }
@@ -117,64 +129,74 @@ const ProfileForm: React.FC = () => {
   if (loading) return <p>Cargando perfil...</p>;
 
   return (
-    <div>
-      <button onClick={() => navigate("/main-passenger")}>
+    <div className={styles.container}>
+      <button
+        className={styles.linkButton}
+        onClick={() => navigate("/main-passenger")}
+      >
         <ArrowLeft size={20} /> Volver
       </button>
 
-      <h1>Perfil del usuario</h1>
+      <h1 className={styles.title}>Perfil del usuario</h1>
 
-      {error && <p style={{ color: "red" }}>{error}</p>}
-      {success && <p style={{ color: "green" }}>{success}</p>}
+      {error && <p className={`${styles.message} ${styles.error}`}>{error}</p>}
+      {success && (
+        <p className={`${styles.message} ${styles.success}`}>{success}</p>
+      )}
 
       <form onSubmit={handleSubmit}>
-        <div>
-          <label>Nombre:</label>
+        <div className={styles.field}>
+          <label className={styles.label}>Nombre:</label>
           <input
             type="text"
             name="first_name"
             value={profile.first_name || ""}
             onChange={handleChange}
+            className={styles.input}
           />
         </div>
 
-        <div>
-          <label>Apellido:</label>
+        <div className={styles.field}>
+          <label className={styles.label}>Apellido:</label>
           <input
             type="text"
             name="last_name"
             value={profile.last_name || ""}
             onChange={handleChange}
+            className={styles.input}
           />
         </div>
 
-        <div>
-          <label>DNI:</label>
+        <div className={styles.field}>
+          <label className={styles.label}>DNI:</label>
           <input
             type="text"
             name="dni"
             value={profile.dni || ""}
             onChange={handleChange}
+            className={styles.input}
           />
         </div>
 
-        <div>
-          <label>Fecha de nacimiento:</label>
+        <div className={styles.field}>
+          <label className={styles.label}>Fecha de nacimiento:</label>
           <input
             type="date"
             name="birth_date"
             value={profile.birth_date || ""}
             onChange={handleChange}
+            className={styles.input}
           />
         </div>
 
-        <div>
-          <label>Dirección:</label>
+        <div className={styles.field}>
+          <label className={styles.label}>Dirección:</label>
           <input
             type="text"
             name="address"
             value={profile.address || ""}
             onChange={handleChange}
+            className={styles.input}
           />
         </div>
 
@@ -194,14 +216,17 @@ const ProfileForm: React.FC = () => {
           onChange={(c, a, n) => handlePhoneChange("emergency", c, a, n)}
         />
 
-        <div>
-          <button type="button" onClick={() => navigate("/change-password")}>
-            Cambiar contraseña
-          </button>
-          <button type="submit" disabled={saving}>
-            {saving ? "Guardando..." : "Guardar"}
-          </button>
-        </div>
+        <button type="submit" className={styles.button} disabled={saving}>
+          {saving ? "Guardando..." : "Guardar"}
+        </button>
+
+        <button
+          type="button"
+          className={styles.linkButton}
+          onClick={() => navigate("/change-password")}
+        >
+          Cambiar contraseña
+        </button>
       </form>
     </div>
   );
