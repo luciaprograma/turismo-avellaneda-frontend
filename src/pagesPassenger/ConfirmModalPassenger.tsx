@@ -58,8 +58,7 @@ const ConfirmModalPassenger: React.FC<ConfirmModalProps> = ({
         navigate("/main-passenger"); // solo navega si éxito
       } else {
         alert(data.message);
-        // cerrar modal aunque haya error, pero NO navegar
-        onClose();
+        onClose(); // cerrar modal aunque haya error
       }
     } catch (err) {
       alert("Error al registrar la excursión. Intente nuevamente.");

@@ -1,5 +1,3 @@
-/* PassengerMenuBar.module.css */
-
 /* === Base: Mobile (default) === */
 .menuBar {
   width: 100%;
@@ -13,7 +11,7 @@
 }
 
 .menuLeft,
-.menuRight {
+.menuRightContainer {
   display: flex;
   align-items: center;
 }
@@ -27,10 +25,29 @@
   padding: 8px;
 }
 
+.menuRight {
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  padding: 8px 12px;
+  border-radius: 8px;
+  transition: background-color 0.2s ease;
+}
+
+.menuRight:hover {
+  background-color: rgba(255, 255, 255, 0.2);
+}
+
+/* Contenedor relativo para que dropdown se alinee al botón */
+.menuLeft {
+  position: relative;
+}
+
+/* Dropdown absoluto relativo a menuLeft */
 .dropdown {
   position: absolute;
-  top: 56px; /* altura del menú */
-  left: 16px;
+  top: 100%; /* justo debajo del botón */
+  left: 0; /* alineado al borde izquierdo del botón */
   background-color: white;
   color: #333;
   border-radius: 8px;
@@ -51,19 +68,6 @@
   background-color: #f0f0f0;
 }
 
-.menuRight {
-  font-size: 16px;
-  font-weight: 600;
-  cursor: pointer;
-  padding: 8px 12px;
-  border-radius: 8px;
-  transition: background-color 0.2s ease;
-}
-
-.menuRight:hover {
-  background-color: rgba(255, 255, 255, 0.2);
-}
-
 /* === Tablet (≥768px) === */
 @media (min-width: 768px) {
   .menuBar {
@@ -76,7 +80,7 @@
   }
 
   .dropdown {
-    top: 64px;
+    top: 100%;
     min-width: 160px;
   }
 
@@ -102,7 +106,7 @@
   }
 
   .dropdown {
-    top: 72px;
+    top: 100%;
     min-width: 180px;
   }
 

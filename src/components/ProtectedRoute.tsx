@@ -1,4 +1,3 @@
-// frontend/src/components/ProtectedRoute.tsx
 import React, { useEffect, useState } from "react";
 import { Navigate } from "react-router-dom";
 
@@ -13,10 +12,22 @@ const ProtectedRoute = ({ children }: ProtectedRouteProps) => {
   useEffect(() => {
     const checkAuth = async () => {
       try {
-        const res = await fetch("http://localhost:8000/api/user", {
+        // Primero, obtener la cookie CSRF
+        await fetch("http://localhost:8000/sanctum/csrf-cookie", {
           credentials: "include",
         });
-        setIsAuth(res.ok);
+
+        // Luego, verificar si el usuario está autenticado
+        const res = await fetch("http://localhost:8000/user", {
+          credentials: "include",
+          headers: { Accept: "application/json" },
+        });
+
+        if (res.status === 200) {
+          setIsAuth(true);
+        } else {
+          setIsAuth(false);
+        }
       } catch (err) {
         setIsAuth(false);
       } finally {
@@ -27,9 +38,7 @@ const ProtectedRoute = ({ children }: ProtectedRouteProps) => {
     checkAuth();
   }, []);
 
-  if (loading) {
-    return <div>Cargando...</div>;
-  }
+  if (loading) return <div>Cargando...</div>;
 
   return isAuth ? <>{children}</> : <Navigate to="/" />;
 };

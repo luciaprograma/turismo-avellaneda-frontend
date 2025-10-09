@@ -1,7 +1,7 @@
 // frontend/src/pagesPassenger/MainPagePassenger.tsx
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import "../styles/MainPagePassenger.module.css";
+import styles from "../styles/MainPagePassenger.module.css";
 import PassengerMenuBar from "./PassengerMenuBar";
 
 interface Excursion {
@@ -21,9 +21,20 @@ const MainPagePassenger: React.FC = () => {
   useEffect(() => {
     const fetchExcursiones = async () => {
       try {
-        const response = await fetch("http://localhost:8000/api/excursions", {
+        // Obtener el token CSRF de la cookie
+        const csrfToken = document.cookie
+          .split("; ")
+          .find((row) => row.startsWith("XSRF-TOKEN="))
+          ?.split("=")[1];
+
+        const response = await fetch("http://localhost:8000/excursions", {
           credentials: "include",
+          headers: {
+            "X-XSRF-TOKEN": decodeURIComponent(csrfToken || ""),
+            Accept: "application/json",
+          },
         });
+
         const data = await response.json();
 
         if (response.ok && data.success) {
@@ -45,17 +56,17 @@ const MainPagePassenger: React.FC = () => {
   if (error) return <p>{error}</p>;
 
   return (
-    <div className="main-container">
+    <div className={styles["main-container"]}>
       <PassengerMenuBar />
 
       <h1>Excursiones Disponibles</h1>
-      <div className="cards-grid">
+      <div className={styles["cards-grid"]}>
         {excursiones.map((excursion, index) => {
           const color = colors[index % colors.length];
           return (
             <div
               key={index}
-              className="card"
+              className={styles.card}
               style={{ backgroundColor: color }}
               onClick={() => navigate(`/excursion/${excursion.id}`)}
             >

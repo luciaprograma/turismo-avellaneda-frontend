@@ -21,10 +21,16 @@ const ForgotPassword: React.FC = () => {
     setLoading(true);
 
     try {
+      // Obtener cookie CSRF (opcional si la ruta lo requiere)
+      await fetch("http://localhost:8000/sanctum/csrf-cookie", {
+        credentials: "include",
+      });
+
       const response = await fetch(
         "http://localhost:8000/api/forgot-password",
         {
           method: "POST",
+          credentials: "include",
           headers: {
             "Content-Type": "application/json",
             Accept: "application/json",
@@ -70,6 +76,7 @@ const ForgotPassword: React.FC = () => {
             value={email}
             onChange={(e) => setEmail(e.target.value)}
             className={styles.input}
+            required
           />
         </div>
 

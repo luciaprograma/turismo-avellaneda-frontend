@@ -32,12 +32,16 @@ const DetailExcursionPassenger: React.FC = () => {
   useEffect(() => {
     const fetchExcursion = async () => {
       try {
+        // Obtener cookie CSRF
         await fetch("http://localhost:8000/sanctum/csrf-cookie", {
           credentials: "include",
         });
 
         const res = await fetch(`http://localhost:8000/api/excursions/${id}`, {
           credentials: "include",
+          headers: {
+            Accept: "application/json",
+          },
         });
 
         if (!res.ok) throw new Error("No se pudo cargar la excursión");

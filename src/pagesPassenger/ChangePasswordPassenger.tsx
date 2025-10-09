@@ -67,7 +67,6 @@ const ChangePassword: React.FC = () => {
 
   return (
     <div className={styles.container}>
-      {/* Botón flecha volver */}
       <button
         onClick={() => navigate(-1)}
         className={styles.linkButton}
