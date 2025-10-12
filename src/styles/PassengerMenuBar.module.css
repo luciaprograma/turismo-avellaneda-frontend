@@ -8,6 +8,9 @@
   background-color: #007bff;
   color: white;
   box-sizing: border-box;
+
+  border-bottom-left-radius: 16px;
+  border-bottom-right-radius: 16px;
 }
 
 .menuLeft,
@@ -26,7 +29,7 @@
 }
 
 .menuRight {
-  font-size: 16px;
+  font-size: 18px;
   font-weight: 600;
   cursor: pointer;
   padding: 8px 12px;

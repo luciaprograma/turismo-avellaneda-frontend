@@ -23,7 +23,7 @@ const EmailVerified: React.FC = () => {
       return;
     }
 
-    const url = `http://127.0.0.1:8000/api/email/verify/${id}/${hash}?expires=${expires}&signature=${signature}`;
+    const url = `http://127.0.0.1:8000/email/verify/${id}/${hash}?expires=${expires}&signature=${signature}`;
 
     fetch(url, { method: "GET", credentials: "include" })
       .then(async (res) => {

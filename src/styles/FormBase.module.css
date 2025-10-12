@@ -105,6 +105,33 @@
   font-style: italic;
   color: #999;
 }
+.react-tel-input {
+  width: 100%;
+}
+
+.react-tel-input .flag-dropdown {
+  width: 70px !important; /* espacio suficiente para +54 */
+}
+
+.react-tel-input .selected-flag {
+  width: 100%;
+  justify-content: center;
+}
+
+.react-tel-input .form-control {
+  width: 100%;
+  padding-left: 80px !important; /* desplaza el texto */
+  font-size: 18px;
+  height: 48px;
+  border-radius: 10px;
+  border: 1px solid #ccc;
+  box-sizing: border-box;
+}
+
+.react-tel-input .form-control:focus {
+  border-color: #007bff;
+  box-shadow: 0 0 0 2px rgba(0, 123, 255, 0.2);
+}
 
 /* === Tablet (≥768px) === */
 @media (min-width: 768px) {
@@ -139,6 +166,17 @@
     font-size: 18px;
   }
 }
+@media (min-width: 768px) {
+  .react-tel-input .flag-dropdown {
+    width: 80px !important;
+  }
+
+  .react-tel-input .form-control {
+    font-size: 18px;
+    height: 52px;
+    padding-left: 90px !important;
+  }
+}
 
 /* === Desktop (≥1024px) === */
 @media (min-width: 1024px) {
@@ -170,5 +208,106 @@
 
   .message {
     font-size: 20px;
+  }
+}
+@media (min-width: 1024px) {
+  .react-tel-input .flag-dropdown {
+    width: 90px !important;
+  }
+
+  .react-tel-input .form-control {
+    font-size: 20px;
+    height: 56px;
+    padding-left: 100px !important;
+  }
+}
+/* Ajuste específico para PhoneField */
+.phoneFieldContainer {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-bottom: 20px;
+}
+
+.phoneFieldContainer .react-tel-input {
+  width: 100%;
+}
+
+.phoneFieldContainer input {
+  width: 100%;
+  padding: 14px;
+  font-size: 18px;
+  border: 1px solid #ccc;
+  border-radius: 10px;
+  box-sizing: border-box;
+}
+
+@media (min-width: 768px) {
+  .phoneFieldContainer input {
+    font-size: 18px;
+    padding: 16px;
+  }
+}
+
+@media (min-width: 1024px) {
+  .phoneFieldContainer input {
+    font-size: 20px;
+    padding: 18px;
+  }
+}
+/* File upload label (acts as button) */
+.fileLabel {
+  display: block;
+  width: 100%;
+  padding: 14px;
+  font-size: 16px;
+  text-align: center;
+  background-color: #007bff;
+  color: white;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+  box-sizing: border-box;
+}
+
+.fileLabel:hover {
+  background-color: #0056b3;
+}
+
+/* File info display */
+.fileInfo {
+  margin-top: 16px;
+  padding: 12px;
+  background-color: #f0f0f0;
+  border-radius: 8px;
+  text-align: left;
+  font-size: 14px;
+  color: #333;
+}
+
+.fileInfo p {
+  margin: 4px 0;
+}
+
+/* Responsive adjustments for file upload */
+@media (min-width: 768px) {
+  .fileLabel {
+    font-size: 18px;
+    padding: 16px;
+  }
+
+  .fileInfo {
+    font-size: 16px;
+  }
+}
+
+@media (min-width: 1024px) {
+  .fileLabel {
+    font-size: 20px;
+    padding: 18px;
+  }
+
+  .fileInfo {
+    font-size: 18px;
   }
 }

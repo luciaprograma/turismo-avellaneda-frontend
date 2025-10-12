@@ -9,15 +9,15 @@ interface Profile {
   user_id?: number;
   first_name?: string;
   last_name?: string;
-  dni?: string;
+  dni?: number;
   birth_date?: string;
   address?: string;
-  phone_country_code?: string;
+  phone_country_code?: number;
   phone_area_code?: string;
-  phone_number?: string;
-  emergency_country_code?: string;
+  phone_number?: number;
+  emergency_country_code?: number;
   emergency_area_code?: string;
-  emergency_number?: string;
+  emergency_number?: number;
 }
 
 const ProfileForm: React.FC = () => {
@@ -43,7 +43,7 @@ const ProfileForm: React.FC = () => {
           credentials: "include",
         });
 
-        const res = await fetch("http://localhost:8000/api/profile", {
+        const res = await fetch("http://localhost:8000/profile", {
           credentials: "include",
         });
 
@@ -69,9 +69,9 @@ const ProfileForm: React.FC = () => {
 
   const handlePhoneChange = (
     fieldPrefix: "phone" | "emergency",
-    country: string,
+    country: number | null,
     area: string,
-    num: string
+    num: number | null
   ) => {
     setProfile((prev) => ({
       ...prev,
@@ -94,7 +94,7 @@ const ProfileForm: React.FC = () => {
 
       const isUpdate = !!profile.id;
       const method = isUpdate ? "PUT" : "POST";
-      const url = "http://localhost:8000/api/profile";
+      const url = "http://localhost:8000/profile";
 
       const res = await fetch(url, {
         method,
@@ -117,9 +117,13 @@ const ProfileForm: React.FC = () => {
             ? "Perfil actualizado correctamente"
             : "Perfil creado correctamente"
         );
+
+        // Redirect to main page after 2 seconds so user can see the success message
+        setTimeout(() => {
+          navigate("/main-passenger");
+        }, 2000);
       } else throw new Error(data.message || "Error desconocido");
     } catch (err: any) {
-      // Solo mostramos un mensaje genérico
       setError(err.message || "Ocurrió un error al guardar el perfil");
     } finally {
       setSaving(false);
@@ -140,9 +144,6 @@ const ProfileForm: React.FC = () => {
       <h1 className={styles.title}>Perfil del usuario</h1>
 
       {error && <p className={`${styles.message} ${styles.error}`}>{error}</p>}
-      {success && (
-        <p className={`${styles.message} ${styles.success}`}>{success}</p>
-      )}
 
       <form onSubmit={handleSubmit}>
         <div className={styles.field}>
@@ -175,6 +176,9 @@ const ProfileForm: React.FC = () => {
             value={profile.dni || ""}
             onChange={handleChange}
             className={styles.input}
+            inputMode="numeric"
+            pattern="[0-9]*"
+            maxLength={15}
           />
         </div>
 
@@ -219,6 +223,10 @@ const ProfileForm: React.FC = () => {
         <button type="submit" className={styles.button} disabled={saving}>
           {saving ? "Guardando..." : "Guardar"}
         </button>
+
+        {success && (
+          <p className={`${styles.message} ${styles.success}`}>{success}</p>
+        )}
 
         <button
           type="button"

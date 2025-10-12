@@ -32,7 +32,7 @@ const ChangePassword: React.FC = () => {
 
       const csrfToken = getCsrfToken();
 
-      const res = await fetch("http://localhost:8000/api/change-password", {
+      const res = await fetch("http://localhost:8000/change-password", {
         method: "POST",
         credentials: "include",
         headers: {

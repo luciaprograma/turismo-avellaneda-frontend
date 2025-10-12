@@ -33,7 +33,7 @@ const PassengerMenuBar: React.FC = () => {
 
       const csrfToken = getCsrfToken();
 
-      const response = await fetch("http://localhost:8000/api/logout", {
+      const response = await fetch("http://localhost:8000/logout", {
         method: "POST",
         credentials: "include",
         headers: {

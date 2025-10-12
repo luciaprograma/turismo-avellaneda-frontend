@@ -1,9 +1,10 @@
 import React, { useState } from "react";
-import { useLocation } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import styles from "../styles/FormBase.module.css";
 
 const ResendVerifyEmail: React.FC = () => {
   const location = useLocation();
+  const navigate = useNavigate();
   const initialEmail = location.state?.email || "";
   const [email, setEmail] = useState(initialEmail);
   const [loading, setLoading] = useState(false);
@@ -30,18 +31,18 @@ const ResendVerifyEmail: React.FC = () => {
       if (response.ok) {
         setMessage(
           data.message ||
-            "Si tu correo está registrado, recibirás un nuevo link de verificación."
+            "Si tu correo está registrado, recibirás un nuevo link de verificación. Rediriigiendo al inicio de sesión..."
         );
         setEmail("");
+
+        setTimeout(() => {
+          navigate("/", { replace: true });
+        }, 2500);
       } else {
-        if (data.errors) {
-          const errorMessages = Object.values(data.errors).flat().join("\n");
-          setMessage(errorMessages);
-        } else if (data.message) {
-          setMessage(data.message);
-        } else {
-          setMessage("Ocurrió un error desconocido.");
-        }
+        const errorMessages = data.errors
+          ? Object.values(data.errors).flat().join("\n")
+          : data.message || "Ocurrió un error desconocido.";
+        setMessage(errorMessages);
       }
     } catch (error) {
       console.error(error);

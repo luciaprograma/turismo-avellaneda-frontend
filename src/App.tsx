@@ -11,6 +11,9 @@ import MainPagePassenger from "./pagesPassenger/MainPagePassenger";
 import DetailExcursionPassenger from "./pagesPassenger/ExcursionDetailPassenger";
 import Profile from "./pagesPassenger/Profile";
 import ChangePassword from "./pagesPassenger/ChangePasswordPassenger";
+import MyExcursions from "./pagesPassenger/MyExcursions";
+import InformPayment from "./pagesPassenger/InformPayment";
+import PaymentReceipts from "./pagesPassenger/PaymentReceipts";
 
 const App: React.FC = () => {
   return (
@@ -55,6 +58,26 @@ const App: React.FC = () => {
             <ChangePassword />
           </ProtectedRoute>
         }
+      />
+      <Route
+        path="/mis-excursiones"
+        element={
+          <ProtectedRoute>
+            <MyExcursions />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/informar-pago/:registrationId"
+        element={
+          <ProtectedRoute>
+            <InformPayment />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/ver-comprobantes/:registrationId"
+        element={<PaymentReceipts />}
       />
     </Routes>
   );

@@ -38,7 +38,7 @@ const ConfirmModalPassenger: React.FC<ConfirmModalProps> = ({
 
       const csrfToken = getCsrfToken();
 
-      const res = await fetch("http://localhost:8000/api/excursions/register", {
+      const res = await fetch("http://localhost:8000/excursions/register", {
         method: "POST",
         credentials: "include",
         headers: {

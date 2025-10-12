@@ -16,6 +16,7 @@ interface ExcursionDetail {
   id: number;
   name: string;
   description: string;
+  location?: string;
   dates: ExcursionDate[];
 }
 
@@ -37,7 +38,7 @@ const DetailExcursionPassenger: React.FC = () => {
           credentials: "include",
         });
 
-        const res = await fetch(`http://localhost:8000/api/excursions/${id}`, {
+        const res = await fetch(`http://localhost:8000/excursions/${id}`, {
           credentials: "include",
           headers: {
             Accept: "application/json",
@@ -82,7 +83,7 @@ const DetailExcursionPassenger: React.FC = () => {
           <p>
             Día y hora: {new Date(d.date).toLocaleDateString()} - {d.time}
           </p>
-          <p>Lugar: (pendiente backend)</p>
+          <p>Lugar: {excursion.location || "No especificado"}</p>
 
           <div className={styles.buttons}>
             <button
