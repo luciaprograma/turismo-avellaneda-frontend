@@ -14,6 +14,7 @@ import ChangePassword from "./pagesPassenger/ChangePasswordPassenger";
 import MyExcursions from "./pagesPassenger/MyExcursions";
 import InformPayment from "./pagesPassenger/InformPayment";
 import PaymentReceipts from "./pagesPassenger/PaymentReceipts";
+import CheckoutExcursion from "./pagesPassenger/CheckoutExcursion";
 
 const App: React.FC = () => {
   return (
@@ -64,6 +65,14 @@ const App: React.FC = () => {
         element={
           <ProtectedRoute>
             <MyExcursions />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/checkout/:excursionDateId"
+        element={
+          <ProtectedRoute>
+            <CheckoutExcursion />
           </ProtectedRoute>
         }
       />

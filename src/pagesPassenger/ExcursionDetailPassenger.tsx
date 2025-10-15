@@ -2,7 +2,6 @@ import React, { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { ArrowLeft } from "lucide-react";
 import styles from "../styles/ExcursionDetailPassenger.module.css";
-import ConfirmModalPassenger from "./ConfirmModalPassenger";
 
 interface ExcursionDate {
   id: number;
@@ -27,13 +26,9 @@ const DetailExcursionPassenger: React.FC = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
-  const [isModalOpen, setIsModalOpen] = useState(false);
-  const [selectedDate, setSelectedDate] = useState<ExcursionDate | null>(null);
-
   useEffect(() => {
     const fetchExcursion = async () => {
       try {
-        // Obtener cookie CSRF
         await fetch("http://localhost:8000/sanctum/csrf-cookie", {
           credentials: "include",
         });
@@ -88,32 +83,21 @@ const DetailExcursionPassenger: React.FC = () => {
           <div className={styles.buttons}>
             <button
               onClick={() => {
-                setSelectedDate(d);
-                setIsModalOpen(true);
+                navigate(`/checkout/${d.id}`, {
+                  state: {
+                    excursionId: excursion.id,
+                    excursionName: excursion.name,
+                    date: d,
+                    location: excursion.location,
+                  },
+                });
               }}
             >
               Comprar
             </button>
-
-            <label className={styles.uploadLabel}>
-              Informar un pago
-              <input
-                type="file"
-                accept=".jpg,.jpeg,.png,.pdf"
-                className={styles.uploadInput}
-              />
-            </label>
           </div>
         </div>
       ))}
-
-      {isModalOpen && excursion && selectedDate && (
-        <ConfirmModalPassenger
-          excursionName={excursion.name}
-          date={selectedDate}
-          onClose={() => setIsModalOpen(false)}
-        />
-      )}
     </div>
   );
 };
