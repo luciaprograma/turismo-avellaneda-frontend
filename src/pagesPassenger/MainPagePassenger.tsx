@@ -1,8 +1,8 @@
-// frontend/src/pagesPassenger/MainPagePassenger.tsx
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import styles from "../styles/MainPagePassenger.module.css";
 import PassengerMenuBar from "./PassengerMenuBar";
+import { getAllExcursions } from "../api";
 
 interface Excursion {
   id: number;
@@ -21,20 +21,7 @@ const MainPagePassenger: React.FC = () => {
   useEffect(() => {
     const fetchExcursiones = async () => {
       try {
-        // Obtener el token CSRF de la cookie
-        const csrfToken = document.cookie
-          .split("; ")
-          .find((row) => row.startsWith("XSRF-TOKEN="))
-          ?.split("=")[1];
-
-        const response = await fetch("http://localhost:8000/excursions", {
-          credentials: "include",
-          headers: {
-            "X-XSRF-TOKEN": decodeURIComponent(csrfToken || ""),
-            Accept: "application/json",
-          },
-        });
-
+        const response = await getAllExcursions();
         const data = await response.json();
 
         if (response.ok && data.success) {

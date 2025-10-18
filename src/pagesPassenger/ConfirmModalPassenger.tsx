@@ -1,6 +1,7 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
 import styles from "../styles/ConfirmModalPassenger.module.css";
+import { registerExcursion } from "../api";
 
 interface ExcursionDate {
   id: number;
@@ -27,42 +28,20 @@ const ConfirmModalPassenger: React.FC<ConfirmModalProps> = ({
 
   const handleConfirm = async () => {
     try {
-      // Obtener token CSRF
-      const getCsrfToken = () => {
-        const cookieValue = document.cookie
-          .split("; ")
-          .find((row) => row.startsWith("XSRF-TOKEN="))
-          ?.split("=")[1];
-        return cookieValue ? decodeURIComponent(cookieValue) : null;
-      };
-
-      const csrfToken = getCsrfToken();
-
-      const res = await fetch("http://localhost:8000/excursions/register", {
-        method: "POST",
-        credentials: "include",
-        headers: {
-          "Content-Type": "application/json",
-          "X-XSRF-TOKEN": csrfToken || "",
-        },
-        body: JSON.stringify({
-          excursion_date_id: date.id,
-        }),
-      });
-
-      const data = await res.json();
+      const response = await registerExcursion(date.id);
+      const data = await response.json();
 
       if (data.success) {
         alert("Inscripción realizada correctamente!");
         onClose();
-        navigate("/main-passenger"); // solo navega si éxito
+        navigate("/main-passenger");
       } else {
         alert(data.message);
-        onClose(); // cerrar modal aunque haya error
+        onClose();
       }
     } catch (err) {
       alert("Error al registrar la excursión. Intente nuevamente.");
-      onClose(); // cerrar modal en caso de error inesperado
+      onClose();
     }
   };
 

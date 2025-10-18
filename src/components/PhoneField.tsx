@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import PhoneInput from "react-phone-input-2";
 import "react-phone-input-2/lib/style.css";
 import styles from "../styles/FormBase.module.css";
@@ -33,44 +33,41 @@ const PhoneField: React.FC<PhoneFieldProps> = ({
     return String(number);
   });
 
+  const isInitialMount = useRef(true);
+
   useEffect(() => {
-    if (countryCode && countryCode !== null) {
+    if (isInitialMount.current) {
+      isInitialMount.current = false;
+      return;
+    }
+
+    if (countryCode !== undefined && countryCode !== null) {
       setCountryCodeStr(String(countryCode));
     }
-    if (areaCode !== undefined && areaCode !== null) {
-      setArea(String(areaCode));
-    } else {
-      setArea("");
+    if (areaCode !== undefined) {
+      setArea(areaCode !== null ? String(areaCode) : "");
     }
-    if (number && number !== null) {
-      setNumStr(String(number));
-    } else {
-      setNumStr("");
+    if (number !== undefined) {
+      setNumStr(number !== null ? String(number) : "");
     }
   }, [countryCode, areaCode, number]);
 
-  useEffect(() => {
-    const countryNum =
-      countryCodeStr && !isNaN(parseInt(countryCodeStr, 10))
-        ? parseInt(countryCodeStr, 10)
-        : null;
-
-    const areaStr = area.trim();
-
-    const phoneNum =
-      numStr && !isNaN(parseInt(numStr, 10)) ? parseInt(numStr, 10) : null;
-
-    onChange(countryNum, areaStr, phoneNum);
-  }, [countryCodeStr, area, numStr]);
-
   const handlePhoneChange = (_value: string, data: any) => {
-    setCountryCodeStr(data.dialCode);
+    const newCountryCode = data.dialCode;
+    setCountryCodeStr(newCountryCode);
+
+    const countryNum = parseInt(newCountryCode, 10) || null;
+    onChange(countryNum, area, numStr ? parseInt(numStr, 10) : null);
   };
 
   const handleAreaChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value;
     if (value === "" || /^\d+$/.test(value)) {
       setArea(value);
+
+      const countryNum = parseInt(countryCodeStr, 10) || null;
+      const phoneNum = numStr ? parseInt(numStr, 10) : null;
+      onChange(countryNum, value, phoneNum);
     }
   };
 
@@ -78,6 +75,10 @@ const PhoneField: React.FC<PhoneFieldProps> = ({
     const value = e.target.value;
     if (value === "" || /^\d+$/.test(value)) {
       setNumStr(value);
+
+      const countryNum = parseInt(countryCodeStr, 10) || null;
+      const phoneNum = value ? parseInt(value, 10) : null;
+      onChange(countryNum, area, phoneNum);
     }
   };
 

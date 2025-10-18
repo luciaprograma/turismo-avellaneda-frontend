@@ -2,6 +2,11 @@ import React, { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { ArrowLeft, FileText, Download, Eye } from "lucide-react";
 import styles from "../styles/FormBase.module.css";
+import {
+  getPaymentsByRegistration,
+  getPaymentViewUrl,
+  downloadPaymentReceipt,
+} from "../api";
 
 interface Payment {
   id: number;
@@ -25,25 +30,13 @@ const PaymentReceipts: React.FC = () => {
   useEffect(() => {
     const fetchPayments = async () => {
       try {
-        await fetch("http://localhost:8000/sanctum/csrf-cookie", {
-          credentials: "include",
-        });
+        const response = await getPaymentsByRegistration(registrationId!);
 
-        const res = await fetch(
-          `http://localhost:8000/api/payments/registration/${registrationId}`,
-          {
-            credentials: "include",
-            headers: {
-              Accept: "application/json",
-            },
-          }
-        );
-
-        if (!res.ok) {
+        if (!response.ok) {
           throw new Error("Error al cargar comprobantes");
         }
 
-        const data = await res.json();
+        const data = await response.json();
 
         if (data.success) {
           setPayments(data.data);
@@ -91,29 +84,18 @@ const PaymentReceipts: React.FC = () => {
   };
 
   const handleView = (paymentId: number) => {
-    window.open(
-      `http://localhost:8000/api/payments/${paymentId}/view`,
-      "_blank"
-    );
+    window.open(getPaymentViewUrl(paymentId), "_blank");
   };
 
   const handleDownload = async (paymentId: number, fileName: string) => {
     try {
-      const res = await fetch(
-        `http://localhost:8000/api/payments/${paymentId}/download`,
-        {
-          credentials: "include",
-          headers: {
-            Accept: "application/json",
-          },
-        }
-      );
+      const response = await downloadPaymentReceipt(paymentId);
 
-      if (!res.ok) {
+      if (!response.ok) {
         throw new Error("Error al descargar el archivo");
       }
 
-      const blob = await res.blob();
+      const blob = await response.blob();
       const url = window.URL.createObjectURL(blob);
       const link = document.createElement("a");
       link.href = url;
@@ -172,7 +154,7 @@ const PaymentReceipts: React.FC = () => {
               {isImage(payment.mime_type) && (
                 <div style={{ marginBottom: "12px" }}>
                   <img
-                    src={`http://localhost:8000/api/payments/${payment.id}/view`}
+                    src={getPaymentViewUrl(payment.id)}
                     alt={payment.original_file_name}
                     style={{
                       width: "100%",

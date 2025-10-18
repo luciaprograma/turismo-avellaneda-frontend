@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import styles from "../styles/FormBase.module.css";
+import { registerUser } from "../api";
 
 const VerifyEmail: React.FC = () => {
   const [email, setEmail] = useState("");
@@ -9,6 +10,7 @@ const VerifyEmail: React.FC = () => {
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState("");
   const navigate = useNavigate();
+
   const handleVerify = async () => {
     if (!email.includes("@") || !email.includes(".")) {
       setMessage("Ingrese un correo válido");
@@ -27,19 +29,7 @@ const VerifyEmail: React.FC = () => {
     setMessage("");
 
     try {
-      const response = await fetch("http://127.0.0.1:8000/api/register", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Accept: "application/json",
-        },
-        body: JSON.stringify({
-          email,
-          password,
-          password_confirmation: repeatPassword,
-        }),
-      });
-
+      const response = await registerUser(email, password, repeatPassword);
       const data = await response.json();
       console.log("Response data:", data);
 

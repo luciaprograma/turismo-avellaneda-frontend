@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { ArrowLeft } from "lucide-react";
 import styles from "../styles/FormBase.module.css";
+import { uploadPaymentReceipt } from "../api";
 
 const InformPayment: React.FC = () => {
   const navigate = useNavigate();
@@ -54,36 +55,14 @@ const InformPayment: React.FC = () => {
     setError(null);
 
     try {
-      await fetch("http://localhost:8000/sanctum/csrf-cookie", {
-        credentials: "include",
-      });
+      const response = await uploadPaymentReceipt(
+        parseInt(registrationId!),
+        selectedFile
+      );
 
-      // Get CSRF token from cookie
-      const getCookie = (name: string) => {
-        const value = `; ${document.cookie}`;
-        const parts = value.split(`; ${name}=`);
-        if (parts.length === 2) return parts.pop()?.split(";").shift();
-      };
+      const data = await response.json();
 
-      const csrfToken = getCookie("XSRF-TOKEN");
-
-      const formData = new FormData();
-      formData.append("registration_id", registrationId!);
-      formData.append("file", selectedFile);
-
-      const res = await fetch("http://localhost:8000/api/payments/upload", {
-        method: "POST",
-        credentials: "include",
-        headers: {
-          Accept: "application/json",
-          "X-XSRF-TOKEN": decodeURIComponent(csrfToken || ""),
-        },
-        body: formData,
-      });
-
-      const data = await res.json();
-
-      if (!res.ok || !data.success) {
+      if (!response.ok || !data.success) {
         throw new Error(data.message || "Error al subir el comprobante");
       }
 

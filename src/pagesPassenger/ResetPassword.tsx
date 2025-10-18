@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import styles from "../styles/FormBase.module.css";
+import { resetPassword } from "../api";
 
 const ResetPassword: React.FC = () => {
   const navigate = useNavigate();
@@ -36,19 +37,12 @@ const ResetPassword: React.FC = () => {
     setLoading(true);
 
     try {
-      const response = await fetch("http://localhost:8000/api/reset-password", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Accept: "application/json",
-        },
-        body: JSON.stringify({
-          email,
-          password,
-          password_confirmation: passwordConfirm,
-          token,
-        }),
-      });
+      const response = await resetPassword(
+        email,
+        password,
+        passwordConfirm,
+        token
+      );
 
       if (!response.ok) {
         if (response.status === 419) {

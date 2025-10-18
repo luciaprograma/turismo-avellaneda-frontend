@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { useNavigate, useLocation, useParams } from "react-router-dom";
 import { ArrowLeft } from "lucide-react";
 import styles from "../styles/FormBase.module.css";
+import { registerExcursion, uploadPaymentReceipt } from "../api";
 
 interface ExcursionData {
   excursionId: number;
@@ -18,7 +19,6 @@ interface ExcursionData {
 const CheckoutExcursion: React.FC = () => {
   const navigate = useNavigate();
   const location = useLocation();
-  const { excursionDateId } = useParams<{ excursionDateId: string }>();
 
   const excursionData = location.state as ExcursionData;
 
@@ -49,14 +49,6 @@ const CheckoutExcursion: React.FC = () => {
     location: excursionLocation,
     excursionId,
   } = excursionData;
-
-  const getCsrfToken = () => {
-    const cookieValue = document.cookie
-      .split("; ")
-      .find((row) => row.startsWith("XSRF-TOKEN="))
-      ?.split("=")[1];
-    return cookieValue ? decodeURIComponent(cookieValue) : null;
-  };
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
@@ -92,29 +84,10 @@ const CheckoutExcursion: React.FC = () => {
     if (!selectedFile) return true;
 
     try {
-      await fetch("http://localhost:8000/sanctum/csrf-cookie", {
-        credentials: "include",
-      });
+      const response = await uploadPaymentReceipt(registrationId, selectedFile);
+      const data = await response.json();
 
-      const csrfToken = getCsrfToken();
-
-      const formData = new FormData();
-      formData.append("registration_id", registrationId.toString());
-      formData.append("file", selectedFile);
-
-      const res = await fetch("http://localhost:8000/api/payments/upload", {
-        method: "POST",
-        credentials: "include",
-        headers: {
-          Accept: "application/json",
-          "X-XSRF-TOKEN": csrfToken || "",
-        },
-        body: formData,
-      });
-
-      const data = await res.json();
-
-      if (!res.ok || !data.success) {
+      if (!response.ok || !data.success) {
         throw new Error(data.message || "Error al subir el comprobante");
       }
 
@@ -130,21 +103,9 @@ const CheckoutExcursion: React.FC = () => {
     setError(null);
 
     try {
-      const csrfToken = getCsrfToken();
-
-      const res = await fetch("http://localhost:8000/excursions/register", {
-        method: "POST",
-        credentials: "include",
-        headers: {
-          "Content-Type": "application/json",
-          "X-XSRF-TOKEN": csrfToken || "",
-        },
-        body: JSON.stringify({
-          excursion_date_id: date.id,
-        }),
-      });
-
-      const data = await res.json();
+      // CAMBIADO: Usa función centralizada
+      const response = await registerExcursion(date.id);
+      const data = await response.json();
 
       if (!data.success) {
         throw new Error(data.message || "Error al crear la inscripción");

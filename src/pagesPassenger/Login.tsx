@@ -1,7 +1,7 @@
-// frontend/src/pagesPassenger/Login.tsx
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import styles from "../styles/FormBase.module.css";
+import { loginUser } from "../api";
 
 const Login: React.FC = () => {
   const navigate = useNavigate();
@@ -9,15 +9,6 @@ const Login: React.FC = () => {
   const [password, setPassword] = useState("");
   const [message, setMessage] = useState("");
   const [loading, setLoading] = useState(false);
-
-  const getCsrfToken = () => {
-    const cookieValue = document.cookie
-      .split("; ")
-      .find((row) => row.startsWith("XSRF-TOKEN="))
-      ?.split("=")[1];
-
-    return cookieValue ? decodeURIComponent(cookieValue) : null;
-  };
 
   const handleLogin = async () => {
     if (!email || !password) {
@@ -29,35 +20,7 @@ const Login: React.FC = () => {
     setMessage("");
 
     try {
-      const csrfResponse = await fetch(
-        "http://localhost:8000/sanctum/csrf-cookie",
-        { credentials: "include" }
-      );
-
-      if (!csrfResponse.ok) {
-        setMessage("Error al obtener token de seguridad");
-        setLoading(false);
-        return;
-      }
-
-      const csrfToken = getCsrfToken();
-      if (!csrfToken) {
-        setMessage("No se pudo obtener el token de seguridad");
-        setLoading(false);
-        return;
-      }
-
-      const response = await fetch("http://localhost:8000/login", {
-        method: "POST",
-        credentials: "include",
-        headers: {
-          "Content-Type": "application/json",
-          Accept: "application/json",
-          "X-XSRF-TOKEN": csrfToken,
-        },
-        body: JSON.stringify({ email, password }),
-      });
-
+      const response = await loginUser(email, password);
       const data = await response.json();
 
       if (response.ok) {

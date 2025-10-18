@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useSearchParams } from "react-router-dom";
 import styles from "../styles/FormBase.module.css";
+import { verifyEmailWithLink } from "../api";
 
 const EmailVerified: React.FC = () => {
   const [searchParams] = useSearchParams();
@@ -23,11 +24,9 @@ const EmailVerified: React.FC = () => {
       return;
     }
 
-    const url = `http://127.0.0.1:8000/email/verify/${id}/${hash}?expires=${expires}&signature=${signature}`;
-
-    fetch(url, { method: "GET", credentials: "include" })
-      .then(async (res) => {
-        if (res.ok) {
+    verifyEmailWithLink(id, hash, expires, signature)
+      .then(async (response) => {
+        if (response.ok) {
           setMessage(
             "¡Correo verificado con éxito! En unos segundos serás redirigido a la página principal."
           );
@@ -36,7 +35,7 @@ const EmailVerified: React.FC = () => {
             window.location.href = "/";
           }, 3000);
         } else {
-          const data = await res.json().catch(() => ({}));
+          const data = await response.json().catch(() => ({}));
           setMessage(
             data.message ||
               "No se pudo verificar el correo. Verificación fallida, volvé a intentarlo."

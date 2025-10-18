@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { ArrowLeft } from "lucide-react";
 import styles from "../styles/FormBase.module.css";
+import { changePassword } from "../api";
 
 const ChangePassword: React.FC = () => {
   const navigate = useNavigate();
@@ -12,43 +13,16 @@ const ChangePassword: React.FC = () => {
     "idle" | "loading" | "success" | "error"
   >("idle");
 
-  const getCsrfToken = () => {
-    const cookieValue = document.cookie
-      .split("; ")
-      .find((row) => row.startsWith("XSRF-TOKEN="))
-      ?.split("=")[1];
-    return cookieValue ? decodeURIComponent(cookieValue) : null;
-  };
-
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setStatus("loading");
     setMessage("");
 
     try {
-      await fetch("http://localhost:8000/sanctum/csrf-cookie", {
-        credentials: "include",
-      });
+      const response = await changePassword(newPassword, confirmPassword);
+      const data = await response.json();
 
-      const csrfToken = getCsrfToken();
-
-      const res = await fetch("http://localhost:8000/change-password", {
-        method: "POST",
-        credentials: "include",
-        headers: {
-          Accept: "application/json",
-          "Content-Type": "application/json",
-          "X-XSRF-TOKEN": csrfToken || "",
-        },
-        body: JSON.stringify({
-          new_password: newPassword,
-          new_password_confirmation: confirmPassword,
-        }),
-      });
-
-      const data = await res.json();
-
-      if (res.ok) {
+      if (response.ok) {
         setStatus("success");
         setMessage(data.message || "Contraseña actualizada correctamente.");
         setTimeout(() => {

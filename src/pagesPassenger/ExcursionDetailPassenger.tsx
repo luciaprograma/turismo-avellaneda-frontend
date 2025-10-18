@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { ArrowLeft } from "lucide-react";
 import styles from "../styles/ExcursionDetailPassenger.module.css";
+import { getExcursionDetails } from "../api";
 
 interface ExcursionDate {
   id: number;
@@ -29,20 +30,11 @@ const DetailExcursionPassenger: React.FC = () => {
   useEffect(() => {
     const fetchExcursion = async () => {
       try {
-        await fetch("http://localhost:8000/sanctum/csrf-cookie", {
-          credentials: "include",
-        });
+        const response = await getExcursionDetails(id!);
 
-        const res = await fetch(`http://localhost:8000/excursions/${id}`, {
-          credentials: "include",
-          headers: {
-            Accept: "application/json",
-          },
-        });
+        if (!response.ok) throw new Error("No se pudo cargar la excursión");
 
-        if (!res.ok) throw new Error("No se pudo cargar la excursión");
-
-        const data = await res.json();
+        const data = await response.json();
         setExcursion(data);
       } catch (err: any) {
         setError(err.message || "Error desconocido");

@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { ArrowLeft } from "lucide-react";
 import PhoneField from "../components/PhoneField";
 import styles from "../styles/FormBase.module.css";
+import { getProfile, updateProfile } from "../api";
 
 interface Profile {
   id?: number;
@@ -28,27 +29,13 @@ const ProfileForm: React.FC = () => {
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState<string | null>(null);
 
-  const getCsrfToken = () => {
-    const cookieValue = document.cookie
-      .split("; ")
-      .find((row) => row.startsWith("XSRF-TOKEN="))
-      ?.split("=")[1];
-    return cookieValue ? decodeURIComponent(cookieValue) : null;
-  };
-
   useEffect(() => {
     const fetchProfile = async () => {
       try {
-        await fetch("http://localhost:8000/sanctum/csrf-cookie", {
-          credentials: "include",
-        });
+        const response = await getProfile();
 
-        const res = await fetch("http://localhost:8000/profile", {
-          credentials: "include",
-        });
-
-        if (!res.ok) throw new Error("No se pudo cargar el perfil");
-        const data = await res.json();
+        if (!response.ok) throw new Error("No se pudo cargar el perfil");
+        const data = await response.json();
         if (data.status === "ok") setProfile(data.data);
         else throw new Error(data.message || "Error desconocido");
       } catch (err: any) {
@@ -89,26 +76,12 @@ const ProfileForm: React.FC = () => {
     setSuccess(null);
 
     try {
-      const csrfToken = getCsrfToken();
-      if (!csrfToken) throw new Error("No se pudo obtener token CSRF");
-
       const isUpdate = !!profile.id;
-      const method = isUpdate ? "PUT" : "POST";
-      const url = "http://localhost:8000/profile";
 
-      const res = await fetch(url, {
-        method,
-        credentials: "include",
-        headers: {
-          Accept: "application/json",
-          "Content-Type": "application/json",
-          "X-XSRF-TOKEN": csrfToken,
-        },
-        body: JSON.stringify(profile),
-      });
+      const response = await updateProfile(profile);
 
-      if (!res.ok) throw new Error("No se pudo guardar el perfil");
-      const data = await res.json();
+      if (!response.ok) throw new Error("No se pudo guardar el perfil");
+      const data = await response.json();
 
       if (data.status === "ok") {
         setProfile(data.data);
@@ -118,7 +91,6 @@ const ProfileForm: React.FC = () => {
             : "Perfil creado correctamente"
         );
 
-        // Redirect to main page after 2 seconds so user can see the success message
         setTimeout(() => {
           navigate("/main-passenger");
         }, 2000);

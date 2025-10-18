@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { Navigate } from "react-router-dom";
+import { checkAuth } from "../api";
 
 interface ProtectedRouteProps {
   children: React.ReactNode;
@@ -10,20 +11,11 @@ const ProtectedRoute = ({ children }: ProtectedRouteProps) => {
   const [isAuth, setIsAuth] = useState(false);
 
   useEffect(() => {
-    const checkAuth = async () => {
+    const verifyAuth = async () => {
       try {
-        // Primero, obtener la cookie CSRF
-        await fetch("http://localhost:8000/sanctum/csrf-cookie", {
-          credentials: "include",
-        });
+        const response = await checkAuth();
 
-        // Luego, verificar si el usuario está autenticado
-        const res = await fetch("http://localhost:8000/user", {
-          credentials: "include",
-          headers: { Accept: "application/json" },
-        });
-
-        if (res.status === 200) {
+        if (response.status === 200) {
           setIsAuth(true);
         } else {
           setIsAuth(false);
@@ -35,7 +27,7 @@ const ProtectedRoute = ({ children }: ProtectedRouteProps) => {
       }
     };
 
-    checkAuth();
+    verifyAuth();
   }, []);
 
   if (loading) return <div>Cargando...</div>;

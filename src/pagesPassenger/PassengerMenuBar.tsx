@@ -1,6 +1,7 @@
 import React, { useState, useRef, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import styles from "../styles/PassengerMenuBar.module.css";
+import { logoutUser } from "../api";
 
 const PassengerMenuBar: React.FC = () => {
   const [dropdownOpen, setDropdownOpen] = useState(false);
@@ -22,26 +23,7 @@ const PassengerMenuBar: React.FC = () => {
 
   const handleLogout = async () => {
     try {
-      // Obtener el token CSRF (misma función que en login)
-      const getCsrfToken = () => {
-        const cookieValue = document.cookie
-          .split("; ")
-          .find((row) => row.startsWith("XSRF-TOKEN="))
-          ?.split("=")[1];
-        return cookieValue ? decodeURIComponent(cookieValue) : null;
-      };
-
-      const csrfToken = getCsrfToken();
-
-      const response = await fetch("http://localhost:8000/logout", {
-        method: "POST",
-        credentials: "include",
-        headers: {
-          Accept: "application/json",
-          "Content-Type": "application/json",
-          "X-XSRF-TOKEN": csrfToken || "",
-        },
-      });
+      const response = await logoutUser();
 
       if (!response.ok) {
         console.error("Error al cerrar sesión:", response.status);

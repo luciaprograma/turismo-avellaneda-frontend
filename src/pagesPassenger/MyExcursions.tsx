@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { ArrowLeft } from "lucide-react";
 import styles from "../styles/ExcursionDetailPassenger.module.css";
+import { getMyExcursions } from "../api";
 
 interface Excursion {
   registration_id: number;
@@ -24,20 +25,12 @@ const MyExcursions: React.FC = () => {
   useEffect(() => {
     const fetchMyExcursions = async () => {
       try {
-        await fetch("http://localhost:8000/sanctum/csrf-cookie", {
-          credentials: "include",
-        });
+        const response = await getMyExcursions();
 
-        const res = await fetch("http://localhost:8000/my-excursions", {
-          credentials: "include",
-          headers: {
-            Accept: "application/json",
-          },
-        });
+        if (!response.ok)
+          throw new Error("No se pudieron cargar las excursiones");
 
-        if (!res.ok) throw new Error("No se pudieron cargar las excursiones");
-
-        const data = await res.json();
+        const data = await response.json();
 
         if (data.success) {
           setExcursions(data.data);

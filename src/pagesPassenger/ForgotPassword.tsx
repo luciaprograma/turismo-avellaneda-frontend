@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import styles from "../styles/FormBase.module.css";
+import { forgotPassword } from "../api";
 
 const ForgotPassword: React.FC = () => {
   const navigate = useNavigate();
@@ -21,23 +22,7 @@ const ForgotPassword: React.FC = () => {
     setLoading(true);
 
     try {
-      // Obtener cookie CSRF (opcional si la ruta lo requiere)
-      await fetch("http://localhost:8000/sanctum/csrf-cookie", {
-        credentials: "include",
-      });
-
-      const response = await fetch(
-        "http://localhost:8000/api/forgot-password",
-        {
-          method: "POST",
-          credentials: "include",
-          headers: {
-            "Content-Type": "application/json",
-            Accept: "application/json",
-          },
-          body: JSON.stringify({ email }),
-        }
-      );
+      const response = await forgotPassword(email);
 
       if (!response.ok) {
         setMessage("Error del servidor: " + response.status);
