@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { useNavigate, useLocation, useParams } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import { ArrowLeft } from "lucide-react";
 import styles from "../styles/FormBase.module.css";
 import { registerExcursion, uploadPaymentReceipt } from "../api";
